@@ -669,6 +669,8 @@ img { max-width: 100%; display: block; }
 
 /* Bag Visuals */
 .prod-visual { position: relative; display: flex; align-items: center; justify-content: center; width: 150px; }
+.prod-visual.prod-visual--photo { width: 100%; height: 100%; padding: 0; overflow: hidden; }
+.prod-visual--photo img { width: 100%; height: 100%; object-fit: cover; }
 .bag-svg { width: 120px; height: 150px; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
 .prod-card:hover .bag-svg { transform: translateY(-10px) scale(1.06); }
 .pv-bag-body {
@@ -935,6 +937,8 @@ img { max-width: 100%; display: block; }
   font-size: 2.2rem; line-height: 1; margin-bottom: 16px; opacity: 1;
 }
 .testi-featured .testi-quote { opacity: 1; }
+.testi-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+.testi-featured h3 { color: var(--white); }
 .testi-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.8; flex: 1; margin-bottom: 20px; font-style: italic; }
 .testi-stars { font-size: 0.9rem; color: var(--gold); margin-bottom: 20px; letter-spacing: 2px; }
 .testi-author { display: flex; align-items: center; gap: 12px; margin-top: auto; }
@@ -1203,8 +1207,10 @@ img { max-width: 100%; display: block; }
 }
 .chip-dot {
   width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: var(--saffron); opacity: 0.45;
   transition: all 0.18s;
 }
+.bag-chip:hover .chip-dot { opacity: 0.8; }
 .bag-chip.selected .chip-dot { opacity: 0; width: 0; }
 .chip-check {
   width: 13px; height: 13px; margin-left: auto; flex-shrink: 0;
