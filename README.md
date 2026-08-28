@@ -26,20 +26,20 @@ Alorex Packaging LLP manufactures high-quality non-woven bags for retailers, bra
 
 ---
 
-## Website Sections
+## Site Pages
 
-| Section | Description |
-|---|---|
-| **Hero** | Brand intro with animated metric counters (clients, orders, cities, experience) |
-| **Marquee Strip** | Scrolling product feature highlights |
-| **About** | Brand story, values, and trust indicators |
-| **Products** | 6-card product showcase with 3D hover tilt effect |
-| **Custom Printing** | Logo printing capabilities with colour swatch live preview |
-| **Process** | 4-step order process (Enquire → Sample → Confirm → Deliver) |
-| **Why Us** | Key differentiators with animated icons |
-| **Testimonials** | Client reviews |
-| **Contact / Enquiry** | Validated enquiry form + business contact details |
-| **Footer** | Links, social, tagline |
+The site is a true multi-page site — each nav item is its own page (clean URLs via folder `index.html` files), not a scroll-anchor on the homepage.
+
+| Page | URL | Description |
+|---|---|---|
+| **Home** | `/` | Hero with animated metric counters + scrolling marquee strip |
+| **About** | `/about/` | Brand story, values, and trust indicators |
+| **Products** | `/products/` | 6-card product showcase (3D hover tilt) + Custom Printing (colour swatch live preview) |
+| **Process** | `/process/` | 4-step order process (Enquire → Sample → Confirm → Deliver) |
+| **Why Us** | `/why-us/` | Key differentiators + Testimonials + FAQ |
+| **Contact** | `/contact/` | Validated enquiry form + business contact details |
+
+Every page shares the same navbar, footer, WhatsApp float, sticky CTA bar, and callback popup (all duplicated per page — this is a static site, no templating/build step).
 
 ---
 
@@ -59,7 +59,7 @@ Alorex Packaging LLP manufactures high-quality non-woven bags for retailers, bra
 - Animated counters on scroll (cubic ease-out via requestAnimationFrame)
 - Product card 3D tilt on hover (CSS perspective + JS rotateX/rotateY)
 - Colour swatch live preview on bag illustration
-- Active nav link highlight synced to scroll position
+- Active nav link highlighted per current page
 - WhatsApp deep link with pre-filled enquiry message
 - Mobile sticky CTA bar (Call / WhatsApp / Get Quote) — dynamically injected, resize-aware
 - Success modal on form submission
@@ -93,11 +93,24 @@ Full client-side validation with live feedback:
 
 ```
 Alorex Packaging LLP/
-├── index.html      # Main website (all sections)
-├── style.css       # All styles + design tokens + animations
-├── script.js       # Interactions, validation, animations
-└── logo.svg        # Standalone logo (for print / external use)
+├── index.html       # Home page
+├── about/
+│   └── index.html   # About page  → /about/
+├── products/
+│   ├── index.html   # Products + Custom Printing page → /products/
+│   └── *.png         # Product photography (used across the site)
+├── process/
+│   └── index.html   # Process page → /process/
+├── why-us/
+│   └── index.html   # Why Us + Testimonials + FAQ page → /why-us/
+├── contact/
+│   └── index.html   # Contact / enquiry form page → /contact/
+├── style.css        # All styles + design tokens + animations (shared)
+├── script.js        # Interactions, validation, animations (shared)
+└── logo.svg         # Standalone logo (for print / external use)
 ```
+
+Every page references shared assets (`/style.css`, `/script.js`, images) with root-absolute paths, so they resolve correctly regardless of folder depth.
 
 ---
 
@@ -112,7 +125,7 @@ Alorex Packaging LLP/
 | Icons | Inline SVG |
 | Hosting | GitHub Pages |
 
-No npm, no build step, no frameworks. Open `index.html` directly in any browser.
+No npm, no build step, no frameworks. Because pages reference assets via root-absolute paths (`/style.css`, `/about/`, etc.), you need a local static server — opening `index.html` directly via `file://` will not resolve those correctly.
 
 ---
 
@@ -121,23 +134,21 @@ No npm, no build step, no frameworks. Open `index.html` directly in any browser.
 ```bash
 # Clone the repo
 git clone https://github.com/sawaariyasethenterprises/Sawaariya-Seth-.git
+cd "Alorex Packaging LLP"
 
-# Open in browser
-open index.html
-```
-
-Or use any static file server:
-```bash
+# Serve locally
 npx serve .
 # or
 python3 -m http.server 8080
 ```
 
+Then visit `http://localhost:8080/`, `http://localhost:8080/about/`, etc.
+
 ---
 
 ## Customisation Checklist
 
-Before going live, replace the following placeholders in `index.html`:
+Before going live, replace the following placeholders (they repeat across every page's shared navbar/footer/popups, and in `contact/index.html`'s form):
 
 - [ ] `+91 XXXXX XXXXX` — actual business phone number
 - [ ] `XXXX@XXXX.com` — actual business email address
