@@ -119,53 +119,6 @@ img { max-width: 100%; display: block; }
 .mt-cta { margin-top: 36px; }
 
 /* ══════════════════════════════════════
-   LOADER
-══════════════════════════════════════ */
-.page-loader {
-  position: fixed; inset: 0; z-index: 9999;
-  background: var(--navy);
-  display: flex; align-items: center; justify-content: center;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-}
-.page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-inner {
-  text-align: center; display: flex; flex-direction: column;
-  align-items: center; gap: 20px;
-}
-.loader-emblem {
-  width: 80px; height: 80px;
-  animation: loaderPulse 1.8s ease-in-out infinite;
-  filter: drop-shadow(0 8px 24px rgba(200,103,58,0.4));
-}
-@keyframes loaderPulse {
-  0%,100% { transform: scale(1);   opacity: 1;   }
-  50%      { transform: scale(1.06); opacity: 0.9; }
-}
-.loader-wordmark {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-}
-.lw-brand {
-  font-family: var(--font-display);
-  font-size: 1.6rem; font-weight: 700; letter-spacing: 0.22em;
-  color: var(--white); text-transform: uppercase;
-}
-.lw-ent {
-  font-family: var(--font-display);
-  font-size: 0.75rem; font-weight: 400; letter-spacing: 0.42em;
-  color: var(--saffron-l); text-transform: uppercase;
-}
-.loader-bar {
-  width: 180px; height: 1.5px; background: rgba(255,255,255,0.08);
-  border-radius: 2px; overflow: hidden;
-}
-.loader-fill {
-  height: 100%; width: 0%;
-  background: linear-gradient(90deg, var(--saffron), var(--gold));
-  border-radius: 2px; animation: loadFill 1.5s ease forwards;
-}
-@keyframes loadFill { to { width: 100%; } }
-
-/* ══════════════════════════════════════
    NAVBAR
 ══════════════════════════════════════ */
 .navbar {
@@ -533,6 +486,36 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.1em; text-transform: uppercase;
 }
 @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ══════════════════════════════════════
+   OVERVIEW (Home) — quick jump cards to every
+   section of the site, since mobile nav hides
+   the menu behind a hamburger
+══════════════════════════════════════ */
+.overview { padding: 96px 0; background: var(--white); }
+.overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.overview-card {
+  display: flex; align-items: flex-start; gap: 16px;
+  background: var(--off-white); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; transition: var(--transition); position: relative;
+}
+.overview-card:hover {
+  background: var(--white); transform: translateY(-4px);
+  box-shadow: var(--shadow-lg); border-color: rgba(255,107,0,0.25);
+}
+.ov-icon {
+  font-size: 1.4rem; flex-shrink: 0; width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--white); border-radius: var(--radius-sm); border: 1px solid var(--border);
+}
+.ov-body { flex: 1; }
+.ov-body h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+.ov-body p { font-size: 0.83rem; color: var(--text-light); line-height: 1.65; margin: 0; }
+.ov-arrow {
+  flex-shrink: 0; color: var(--saffron); opacity: 0; margin-top: 6px;
+  transform: translateX(-4px); transition: var(--transition);
+}
+.overview-card:hover .ov-arrow { opacity: 1; transform: translateX(0); }
 
 /* ══════════════════════════════════════
    ABOUT
@@ -1721,9 +1704,12 @@ img { max-width: 100%; display: block; }
   .hero-subheadline { font-size: 0.93rem; line-height: 1.75; }
 
   /* Section spacing */
-  .about, .products, .process, .whyus, .testimonials { padding: 56px 0; }
+  .about, .products, .process, .whyus, .testimonials, .overview { padding: 56px 0; }
   .faq-section, .contact { padding: 52px 0; }
   .contact-layout, .whyus-layout { gap: 32px; }
+
+  /* Overview */
+  .overview-grid { grid-template-columns: 1fr 1fr; }
 
   /* About */
   .about-stat-card { display: none; }
@@ -1803,9 +1789,13 @@ img { max-width: 100%; display: block; }
   .container { padding: 0 16px; }
 
   /* Section spacing */
-  .about, .products, .process, .whyus, .testimonials { padding: 44px 0; }
+  .about, .products, .process, .whyus, .testimonials, .overview { padding: 44px 0; }
   .faq-section, .contact { padding: 44px 0; }
   .section-header { margin-bottom: 24px; }
+
+  /* Overview */
+  .overview-grid { grid-template-columns: 1fr; }
+  .overview-card { padding: 18px; }
 
   /* Hero */
   .hero-container { padding: 88px 16px 44px; }

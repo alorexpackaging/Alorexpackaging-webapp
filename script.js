@@ -3,12 +3,6 @@
    Main JavaScript
 ══════════════════════════════════════ */
 
-/* ── PAGE LOADER ── */
-window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  setTimeout(() => loader.classList.add('hidden'), 1600);
-});
-
 /* ── NAVBAR SCROLL STATE ── */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
