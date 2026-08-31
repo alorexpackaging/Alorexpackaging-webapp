@@ -1,26 +1,189 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ══════════════════════════════════════════════════════════════
+   ALOREX PACKAGING — DESIGN TOKENS
+   Premium · Industrial · Modern · Sustainable · B2B
+
+   Two tiers:
+   1. --brand-*   raw, literal brand colors (never used directly
+                  in components — only referenced below).
+   2. semantic    shadcn/Tailwind tokens (--background, --primary,
+                  etc.) that components actually consume. Retuning
+                  the brand palette means editing tier 1 only.
+   ══════════════════════════════════════════════════════════════ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ---- Brand palette (raw) ---- */
+  --brand-navy: #1c2840;
+  --brand-navy-light: #2a3d60;
+  --brand-saffron: #c8673a; /* decorative/large-scale use (headings, icons, gradients) */
+  --brand-saffron-strong: #a8501d; /* AA-safe on ivory/white — used for interactive primary */
+  --brand-saffron-soft: #dc8a5e;
+  --brand-gold: #c89b2e; /* accent — dark surfaces only */
+  --brand-gold-light: #deb847;
+  --brand-ivory: #faf8f4;
+  --brand-ivory-dim: #f2eee6;
+  --brand-ink: #1e1a14;
+  --brand-ink-soft: #6b6153;
+  --brand-border: #e7dfd2;
+  --brand-accent-tint: #f5e9de;
+  --brand-whatsapp: #25d366;
+  --brand-whatsapp-strong: #1ebe5b;
+
+  /* ---- Semantic tokens (consumed by components) ---- */
+  --background: var(--brand-ivory);
+  --foreground: var(--brand-ink);
+
+  --card: #ffffff;
+  --card-foreground: var(--brand-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--brand-ink);
+
+  --primary: var(--brand-saffron-strong);
+  --primary-foreground: #ffffff;
+
+  --secondary: var(--brand-navy);
+  --secondary-foreground: var(--brand-ivory);
+
+  --muted: var(--brand-ivory-dim);
+  --muted-foreground: var(--brand-ink-soft);
+
+  --accent: var(--brand-accent-tint);
+  --accent-foreground: var(--brand-ink);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --border: var(--brand-border);
+  --input: var(--brand-border);
+  --ring: var(--brand-saffron-strong);
+
+  --radius: 0.5rem; /* tighter, more industrial than the shadcn default 0.625rem */
+}
+
+.dark {
+  --background: var(--brand-navy);
+  --foreground: var(--brand-ivory);
+
+  --card: var(--brand-navy-light);
+  --card-foreground: var(--brand-ivory);
+  --popover: var(--brand-navy-light);
+  --popover-foreground: var(--brand-ivory);
+
+  --primary: var(--brand-saffron-soft);
+  --primary-foreground: var(--brand-navy);
+
+  --secondary: var(--brand-ivory);
+  --secondary-foreground: var(--brand-navy);
+
+  --muted: var(--brand-navy-light);
+  --muted-foreground: #b9c0cf;
+
+  --accent: var(--brand-navy-light);
+  --accent-foreground: var(--brand-ivory);
+
+  --destructive: oklch(0.704 0.191 22.216);
+
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.16);
+  --ring: var(--brand-gold);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand colors exposed as first-class Tailwind utilities:
+     bg-navy, text-gold, border-saffron, etc. */
+  --color-navy: var(--brand-navy);
+  --color-navy-light: var(--brand-navy-light);
+  --color-saffron: var(--brand-saffron);
+  --color-saffron-strong: var(--brand-saffron-strong);
+  --color-saffron-soft: var(--brand-saffron-soft);
+  --color-gold: var(--brand-gold);
+  --color-gold-light: var(--brand-gold-light);
+  --color-ivory: var(--brand-ivory);
+  --color-whatsapp: var(--brand-whatsapp);
+  --color-whatsapp-strong: var(--brand-whatsapp-strong);
+
+  /* Typography — three-tier system, see FOUNDATION.md */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
+  --font-serif: var(--font-cormorant);
+  --font-display: var(--font-cinzel);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Radius scale, derived from --radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---- Container system ----
+   One brand-controlled max-width + fluid edge padding, used by
+   every section via the <Container> component. */
+@utility container {
+  width: 100%;
+  max-width: 80rem; /* 1280px */
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ---- Section eyebrow rule ----
+   The short accent dash before every SectionHeading eyebrow label. */
+@utility eyebrow-rule {
+  content: "";
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    @apply font-sans scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::selection {
+    background: var(--brand-saffron-strong);
+    color: #ffffff;
+  }
 }
