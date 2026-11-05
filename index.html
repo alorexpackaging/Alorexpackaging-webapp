@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Security (GitHub Pages can't set HTTP headers, so these are meta equivalents) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://api.web3forms.com https://script.google.com https://script.googleusercontent.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
   <title>Alorex Packaging LLP | Premium Non Woven Bag Manufacturers India</title>
   <meta name="description" content="Alorex Packaging LLP — New-generation non woven bag manufacturer in India. W-Cut, U-Cut, D-Cut, Box Bags, Loop Handle & BOPP bags with custom printing. Factory-direct pricing. Pan India delivery." />
   <meta name="keywords" content="non woven bags manufacturer India, W-cut bags, U-cut bags, D-cut bags, box bags, loop handle bags, BOPP bags, custom printed bags, eco friendly bags, non woven bag supplier, wholesale non woven bags" />
@@ -72,12 +77,7 @@
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CLYBXFL8H7"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-CLYBXFL8H7');
-  </script>
+  <script src="analytics.js"></script>
 </head>
 <body>
 
@@ -937,16 +937,17 @@
               </div>
             </div>
             <form class="enquiry-form" id="enquiryForm" novalidate>
+              <div class="hp-field" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
 
               <div class="form-row-2">
                 <div class="fld" id="fld-name">
                   <label for="inp-name">Full Name *</label>
-                  <input type="text" id="inp-name" name="name" required autocomplete="name" />
+                  <input type="text" id="inp-name" maxlength="80" name="name" required autocomplete="name" />
                   <span class="fld-error" id="err-name"></span>
                 </div>
                 <div class="fld" id="fld-phone">
                   <label for="inp-phone">Mobile Number *</label>
-                  <input type="tel" id="inp-phone" name="phone" required autocomplete="tel" inputmode="numeric" />
+                  <input type="tel" id="inp-phone" maxlength="20" name="phone" required autocomplete="tel" inputmode="numeric" />
                   <span class="fld-error" id="err-phone"></span>
                 </div>
               </div>
@@ -954,12 +955,12 @@
               <div class="form-row-2">
                 <div class="fld" id="fld-email">
                   <label for="inp-email">Email Address</label>
-                  <input type="email" id="inp-email" name="email" autocomplete="email" />
+                  <input type="email" id="inp-email" maxlength="120" name="email" autocomplete="email" />
                   <span class="fld-error" id="err-email"></span>
                 </div>
                 <div class="fld" id="fld-city">
                   <label for="inp-city">City &amp; State *</label>
-                  <input type="text" id="inp-city" name="city" required autocomplete="address-level2" />
+                  <input type="text" id="inp-city" maxlength="100" name="city" required autocomplete="address-level2" />
                   <span class="fld-error" id="err-city"></span>
                 </div>
               </div>
@@ -999,7 +1000,7 @@
               <div class="form-row-2">
                 <div class="fld" id="fld-qty">
                   <label for="inp-qty">Approx. Quantity *</label>
-                  <input type="text" id="inp-qty" name="quantity" inputmode="numeric" required />
+                  <input type="text" id="inp-qty" maxlength="40" name="quantity" inputmode="numeric" required />
                   <span class="fld-error" id="err-qty"></span>
                 </div>
                 <div class="fld">
@@ -1048,7 +1049,7 @@
 
               <div class="fld">
                 <label for="inp-specs">Additional Specifications</label>
-                <textarea id="inp-specs" name="specs" rows="3" placeholder="Describe GSM, colour, special design needs, or any other specific requirements..."></textarea>
+                <textarea id="inp-specs" maxlength="1000" name="specs" rows="3" placeholder="Describe GSM, colour, special design needs, or any other specific requirements..."></textarea>
               </div>
 
               <div class="form-actions">
@@ -1128,7 +1129,7 @@
             <div class="footer-contact-list">
               <p>📞 <a href="tel:+919756565319">+91 97565 65319</a></p>
               <p>📧 <a href="mailto:info@alorexpackaging.com">info@alorexpackaging.com</a></p>
-              <p>💬 <a href="https://wa.me/919756565319" target="_blank">WhatsApp Us</a></p>
+              <p>💬 <a href="https://wa.me/919756565319" target="_blank" rel="noopener noreferrer">WhatsApp Us</a></p>
               <p>📍 India · Pan India Delivery</p>
             </div>
           </div>
@@ -1169,19 +1170,20 @@
       </div>
 
       <form class="cb-form" id="cbForm">
+        <div class="hp-field" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
         <div class="cb-row-2">
           <div class="cb-fld">
             <label for="cb-name">Your Name</label>
-            <input type="text" id="cb-name" autocomplete="name" required />
+            <input type="text" id="cb-name" maxlength="80" autocomplete="name" required />
           </div>
           <div class="cb-fld">
             <label for="cb-phone">Mobile Number</label>
-            <input type="tel" id="cb-phone" autocomplete="tel" inputmode="numeric" required />
+            <input type="tel" id="cb-phone" maxlength="20" autocomplete="tel" inputmode="numeric" required />
           </div>
         </div>
         <div class="cb-fld">
           <label for="cb-city">City &amp; State</label>
-          <input type="text" id="cb-city" autocomplete="address-level2" required />
+          <input type="text" id="cb-city" maxlength="100" autocomplete="address-level2" required />
         </div>
         <div class="cb-fld">
           <label>Which Bag Are You Looking For?</label>
@@ -1238,7 +1240,7 @@
       </div>
       <h3>Enquiry Received!</h3>
       <p>Our team will contact you within <strong>24 hours</strong> with a personalised quote.</p>
-      <button class="modal-close-btn" onclick="closeModal()">Done</button>
+      <button type="button" class="modal-close-btn">Done</button>
     </div>
   </div>
 

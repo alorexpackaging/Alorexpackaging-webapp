@@ -1806,3 +1806,6 @@ img { max-width: 100%; display: block; }
   .marquee-items { gap: 20px; }
   .marquee-items span { font-size: 0.65rem; }
 }
+
+/* Honeypot anti-spam field: invisible to people, bots fill it in */
+.hp-field { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }

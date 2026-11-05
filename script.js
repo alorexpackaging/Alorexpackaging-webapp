@@ -3,6 +3,36 @@
    Main JavaScript
 ══════════════════════════════════════ */
 
+/* ── CLICKJACKING GUARD ──
+   GitHub Pages can't send X-Frame-Options / frame-ancestors headers,
+   so refuse to run inside a frame on another site. */
+if (window.top !== window.self) {
+  try { window.top.location = window.self.location.href; } catch (_) { document.documentElement.style.display = 'none'; }
+}
+
+/* ── ANTI-SPAM HELPERS ── */
+const PAGE_LOADED_AT   = Date.now();
+const MIN_FILL_MS      = 3000;   // bots submit instantly; humans take longer
+const SUBMIT_COOLDOWN  = 60000;  // one submission per minute per browser
+const MAX_LEN = { name: 80, phone: 20, email: 120, city: 100, qty: 40, specs: 1000 };
+
+function isBotSubmission(formEl) {
+  const trap = formEl.querySelector('input[name="website"]');
+  if (trap && trap.value) return true;                    // honeypot filled
+  if (Date.now() - PAGE_LOADED_AT < MIN_FILL_MS) return true; // too fast
+  return false;
+}
+function inCooldown() {
+  try {
+    const last = parseInt(localStorage.getItem('alx_last_submit') || '0', 10);
+    return Date.now() - last < SUBMIT_COOLDOWN;
+  } catch (_) { return false; }
+}
+function markSubmitted() {
+  try { localStorage.setItem('alx_last_submit', String(Date.now())); } catch (_) {}
+}
+const clip = (v, n) => String(v || '').trim().slice(0, n);
+
 /* ── PAGE LOADER ── */
 window.addEventListener('load', () => {
   const loader = document.getElementById('loader');
@@ -233,20 +263,34 @@ form && form.addEventListener('submit', async e => {
 
   const btn     = form.querySelector('.form-submit');
   const btnText = btn.querySelector('.btn-text');
+
+  /* Bots: pretend success, send nothing */
+  if (isBotSubmission(form)) {
+    form.reset();
+    overlay.classList.add('active');
+    return;
+  }
+  if (inCooldown()) {
+    btnText.textContent = 'Please wait a minute before sending again';
+    setTimeout(() => { btnText.textContent = 'Submit Enquiry'; }, 4000);
+    return;
+  }
+
   btnText.textContent = 'Sending...';
   btn.disabled = true;
 
-  /* ── Collect values ── */
-  const name       = document.getElementById('inp-name').value.trim();
-  const phone      = document.getElementById('inp-phone').value.trim();
-  const email      = document.getElementById('inp-email').value.trim();
-  const city       = document.getElementById('inp-city').value.trim();
+  /* ── Collect values (length-capped) ── */
+  const name       = clip(document.getElementById('inp-name').value,  MAX_LEN.name);
+  const phone      = clip(document.getElementById('inp-phone').value, MAX_LEN.phone);
+  const email      = clip(document.getElementById('inp-email').value, MAX_LEN.email);
+  const city       = clip(document.getElementById('inp-city').value,  MAX_LEN.city);
   const bagType    = selectedBags.join(', ');
-  const qty        = document.getElementById('inp-qty').value.trim();
+  const qty        = clip(document.getElementById('inp-qty').value,   MAX_LEN.qty);
   const bagSize    = document.getElementById('inp-size').value.trim();
-  const printing   = document.getElementById('inp-print').value;
-  const specs      = document.getElementById('inp-specs').value.trim();
+  const printing   = document.getElementById('inp-print').value === 'no' ? 'no' : 'yes';
+  const specs      = clip(document.getElementById('inp-specs').value, MAX_LEN.specs);
   const printLabel = printing === 'yes' ? 'Yes — With Logo Printing' : 'No — Plain Bags Required';
+  markSubmitted();
 
   /* ── 1. Email via Web3Forms ── */
   try {
@@ -254,6 +298,7 @@ form && form.addEventListener('submit', async e => {
 
     const payload = new FormData();
     payload.append('access_key',         WEB3FORMS_KEY);
+    payload.append('botcheck',           '');   // Web3Forms' built-in honeypot
     payload.append('subject',            `New Enquiry: ${bagType} — ${name} (${city})`);
     payload.append('from_name',          'Alorex Packaging LLP Website');
     payload.append('replyto',            email || 'info@alorexpackaging.com');
@@ -281,7 +326,7 @@ form && form.addEventListener('submit', async e => {
     fetch(SHEETS_URL, {
       method: 'POST',
       mode: 'no-cors',
-      body: JSON.stringify({ name, phone, email, city, bagType, bagSize, qty, printing: printLabel, specs }),
+      body: JSON.stringify({ name, phone, email, city, bagType, bagSize, qty, printing: printLabel, specs, website: '' }),
     });
   } catch (_) { /* silent */ }
 
@@ -315,6 +360,7 @@ function closeModal() {
 overlay && overlay.addEventListener('click', e => {
   if (e.target === overlay) closeModal();
 });
+document.querySelectorAll('.modal-close-btn').forEach(b => b.addEventListener('click', closeModal));
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
@@ -386,17 +432,27 @@ window.addEventListener('scroll', () => {
 
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const name  = document.getElementById('cb-name').value.trim();
-    const phone = document.getElementById('cb-phone').value.trim();
-    const city  = document.getElementById('cb-city').value.trim();
+    const name  = clip(document.getElementById('cb-name').value,  MAX_LEN.name);
+    const phone = clip(document.getElementById('cb-phone').value, MAX_LEN.phone);
+    const city  = clip(document.getElementById('cb-city').value,  MAX_LEN.city);
     if (!name || !phone || !city) return;
 
-    try {
-      fetch('https://script.google.com/macros/s/AKfycbx_cn2xSVxf2qcCFGYtICuss7cF-c4pHOvc_7Q0-adBrdJDjcX3qymrcK-XqIBAP0Gg/exec', {
-        method: 'POST', mode: 'no-cors',
-        body: JSON.stringify({ name, phone, city, bagType: selectedBags.size ? [...selectedBags].join(', ') : 'Not selected', source: 'Popup' }),
-      });
-    } catch (_) { /* silent */ }
+    /* Same checks as the main form */
+    const phoneInput = document.getElementById('cb-phone');
+    const phoneErr   = RULES.phone.msg(phone);
+    phoneInput.setCustomValidity(phoneErr);
+    if (phoneErr) { phoneInput.reportValidity(); return; }
+
+    const isBot = isBotSubmission(form);
+    if (!isBot && !inCooldown()) {
+      markSubmitted();
+      try {
+        fetch(SHEETS_URL, {
+          method: 'POST', mode: 'no-cors',
+          body: JSON.stringify({ name, phone, city, bagType: selectedBags.size ? [...selectedBags].join(', ') : 'Not selected', source: 'Popup', website: '' }),
+        });
+      } catch (_) { /* silent */ }
+    }
 
     /* Show thank you state */
     const modal = overlay.querySelector('.cb-modal');
@@ -408,18 +464,25 @@ window.addEventListener('scroll', () => {
         <div class="cb-ty-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <h3 class="cb-ty-title">Thank You, ${name}!</h3>
+        <h3 class="cb-ty-title"></h3>
         <p class="cb-ty-msg">Our team will reach you within <span class="cb-ty-highlight">2 hours</span> with pricing &amp; a free sample dispatch.</p>
         <div class="cb-ty-steps">
           <div class="cb-ty-step"><span>📞</span><p>Callback within 2 hrs</p></div>
           <div class="cb-ty-step"><span>📦</span><p>Free sample dispatched</p></div>
           <div class="cb-ty-step"><span>✅</span><p>No advance payment</p></div>
         </div>
-        <button class="cb-ty-btn" onclick="document.getElementById('cbOverlay').classList.remove('active')">
+        <button type="button" class="cb-ty-btn">
           Continue Exploring →
         </button>
       </div>`;
+    /* Insert the visitor's name as text, never as HTML */
+    modal.querySelector('.cb-ty-title').textContent = `Thank You, ${name}!`;
+    modal.querySelector('.cb-ty-btn').addEventListener('click', () => overlay.classList.remove('active'));
   });
+
+  /* Clear custom phone error as the user edits */
+  const cbPhone = document.getElementById('cb-phone');
+  cbPhone && cbPhone.addEventListener('input', () => cbPhone.setCustomValidity(''));
 })();
 
 /* ── CLEAR VALIDATION ON OUTSIDE CLICK ── */
